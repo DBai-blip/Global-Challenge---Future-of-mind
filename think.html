@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <title>Think Lab – Future Mind Lab</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- We reuse the same inline style definitions from the main index page to keep a consistent look -->
+  <style>
+    :root {
+      --bg-main: #2a0f0f;
+      --bg-alt: #351314;
+      --bg-card: #3d1819;
+      --accent: #ff7b4a;
+      --accent-soft: #ffcc99;
+      --text-main: #f7f3ed;
+      --text-muted: #d3c5bc;
+      --border-subtle: rgba(255,255,255,0.06);
+      --shadow-soft: 0 18px 45px rgba(0,0,0,0.6);
+      --radius-xl: 18px;
+      --transition-fast: 0.2s ease;
+      --max-width: 1120px;
+      --nav-height: 68px;
+      --font-body: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      --font-script: "Snell Roundhand", "Segoe Script", cursive;
+    }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background: radial-gradient(circle at top, #3a1515 0, #190606 55%, #090203 100%);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+    img {
+      max-width: 100%;
+      display: block;
+    }
+    .container {
+      width: 100%;
+      max-width: var(--max-width);
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--nav-height);
+      z-index: 40;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(to bottom, rgba(10,3,3,0.95), rgba(10,3,3,0.75));
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .nav-inner {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      overflow: hidden;
+      background: radial-gradient(circle at 20% 0, #0735cb, #3f08f7 40%, #2b0503 90%);
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-script);
+      font-size: 1.2rem;
+    }
+    .brand-text-main {
+      font-family: var(--font-script);
+      font-size: 1.3rem;
+      color: var(--accent);
+      line-height: 1.1;
+    }
+    .brand-text-sub {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+    nav ul {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      list-style: none;
+      font-size: 0.9rem;
+    }
+    nav a.nav-link {
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      transition: var(--transition-fast);
+      opacity: 0.9;
+    }
+    nav a.nav-link:hover {
+      border-color: rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.03);
+      opacity: 1;
+    }
+    .nav-cta {
+      padding: 7px 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, #ff7b4a, #ffb48a);
+      color: #2a0503;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .nav-cta:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 35px rgba(0,0,0,0.65);
+    }
+    .lang-switch {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.08);
+      margin-left: 6px;
+    }
+    .lang-btn {
+      border: none;
+      background: transparent;
+      font-size: 0.78rem;
+      padding: 3px 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 999px;
+      transition: background var(--transition-fast), color var(--transition-fast);
+    }
+    .lang-btn.active {
+      background: var(--accent);
+      color: #2a0503;
+    }
+    /* Role selection modal */
+    .role-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+    .role-modal {
+      background: var(--bg-card);
+      padding: 30px;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      max-width: 420px;
+      text-align: center;
+      line-height: 1.5;
+    }
+    .role-buttons {
+      display: flex;
+      gap: 14px;
+      margin: 20px 0;
+      justify-content: center;
+    }
+    .role-btn {
+      padding: 10px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: var(--bg-alt);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: background var(--transition-fast), transform var(--transition-fast);
+    }
+    .role-btn:hover {
+      background: var(--bg-card);
+      transform: translateY(-2px);
+    }
+    /* Module page specific styles */
+    /*
+     * The learning modules should feel immersive and focused, similar to full‑screen quiz apps.
+     * Stretch the container to occupy most of the viewport while still centring it within the page.
+     */
+    .module-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-soft);
+      padding: 32px;
+      /* Use a wide max‑width so the module feels like its own page, but cap at 90% of the viewport */
+      max-width: 900px;
+      width: 90%;
+      /* Position below the fixed nav bar */
+      margin: calc(var(--nav-height) + 40px) auto;
+      /* Ensure the module stretches to near full height of the viewport without overflowing */
+      min-height: calc(100vh - var(--nav-height) - 100px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .module-progress {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--accent-soft);
+      margin-bottom: 10px;
+    }
+    .progress-bar {
+      width: 100%;
+      height: 6px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-bottom: 18px;
+    }
+    .progress-bar .progress {
+      height: 100%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      width: 0%;
+      transition: width var(--transition-fast);
+    }
+    .module-title {
+      font-size: 1.6rem;
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+    .module-scenario {
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+    .module-questions button.choice-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: var(--bg-alt);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-xl);
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      color: var(--text-main);
+      cursor: pointer;
+      transition: background var(--transition-fast), border-color var(--transition-fast);
+    }
+    .module-questions button.choice-btn:hover {
+      background: var(--bg-card);
+      border-color: var(--accent-soft);
+    }
+    .module-explanation {
+      margin-top: 14px;
+      color: var(--accent-soft);
+      min-height: 32px;
+      line-height: 1.4;
+    }
+    .btn-primary {
+      padding: 10px 20px;
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      color: #2a0503;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 24px;
+      display: inline-block;
+      transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.5);
+    }
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding: 20px 0;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Role selection modal -->
+  <div id="roleModal" class="role-modal-backdrop" style="display:none;">
+    <div class="role-modal">
+      <h2 class="i18n" data-en="Welcome to Future Mind Lab" data-zh="欢迎来到 Future Mind Lab"></h2>
+      <p class="i18n" data-en="Before we start, who are you visiting as? We’ll highlight the parts most helpful to you."
+         data-zh="开始之前，请选择你的身份，我们会为你突出最适合你的内容。"></p>
+      <div class="role-buttons">
+        <button class="role-btn" data-role="student">
+          <span class="i18n" data-en="Student" data-zh="学生"></span>
+        </button>
+        <button class="role-btn" data-role="teacher">
+          <span class="i18n" data-en="Teacher" data-zh="老师"></span>
+        </button>
+        <button class="role-btn" data-role="parent">
+          <span class="i18n" data-en="Parent / Carer" data-zh="家长 / 监护人"></span>
+        </button>
+      </div>
+      <p class="role-hint i18n"
+         data-en="You can still browse everything – this just decides where we guide you first."
+         data-zh="你仍然可以浏览全部内容，这只会决定我们优先把你带到哪里。">
+      </p>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <header>
+    <div class="container nav-inner">
+      <div class="brand">
+        <div class="brand-logo">
+          <span>FM</span>
+        </div>
+        <div>
+          <div class="brand-text-main">Future Mind Lab</div>
+          <div class="brand-text-sub i18n"
+               data-en="Independent Minds · Future of Work"
+               data-zh="独立思考 · 未来工作"></div>
+        </div>
+      </div>
+      <nav>
+        <ul>
+          <li><a href="index.html#home" class="nav-link i18n" data-en="Home" data-zh="首页"></a></li>
+          <li><a href="index.html#learn" class="nav-link i18n" data-en="Learn" data-zh="学习区"></a></li>
+          <li><a href="think.html" class="nav-link i18n" data-en="Think Lab" data-zh="思考实验室"></a></li>
+          <li><a href="index.html#create" class="nav-link i18n" data-en="Create" data-zh="创造区"></a></li>
+          <li><a href="index.html#insights" class="nav-link i18n" data-en="Insights" data-zh="未来趋势"></a></li>
+          <li><a href="index.html#voices" class="nav-link i18n" data-en="Youth Voices" data-zh="青少年声音"></a></li>
+          <li><a href="index.html#educators" class="nav-link i18n" data-en="Adults" data-zh="老师与家长"></a></li>
+        </ul>
+      </nav>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <button class="nav-cta" id="startThinkingTop">
+          <span class="i18n" data-en="Start Thinking" data-zh="开始思考"></span>
+        </button>
+        <div class="lang-switch">
+          <button class="lang-btn" data-lang="en">EN</button>
+          <button class="lang-btn" data-lang="zh">中文</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main content -->
+  <main>
+    <section id="modules">
+      <div class="container">
+        <div class="module-container">
+          <div class="module-progress"><span id="moduleProgress"></span></div>
+          <div class="progress-bar"><div class="progress" id="progressBar"></div></div>
+          <h2 class="module-title" id="moduleTitle"></h2>
+          <p class="module-scenario" id="moduleScenario"></p>
+          <div class="module-questions" id="moduleQuestions"></div>
+          <div class="module-explanation" id="moduleExplanation"></div>
+          <button class="btn-primary" id="moduleNextBtn" style="display:none;">
+            <span class="i18n" data-en="Next" data-zh="下一步"></span>
+          </button>
+        </div>
+        <div id="completionMessage" style="display:none;text-align:center;margin:160px 0;">
+          <h2 class="i18n" data-en="Well done!" data-zh="恭喜完成！"></h2>
+          <p class="i18n" data-en="You have completed all 10 modules." data-zh="你已经完成了全部 10 个模块。"></p>
+          <a href="index.html#create" class="btn-primary i18n" data-en="Continue to Create Zone" data-zh="前往创造区"></a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© <span id="year"></span> Future Mind Lab. globalchallenge@dbai.knox.futuremindlab.com</p>
+    </div>
+  </footer>
+
+  <script>
+    // -----------------------
+    // Language switching
+    // -----------------------
+    const langButtons = document.querySelectorAll('.lang-btn');
+    function setLanguage(lang) {
+      document.body.setAttribute('data-lang', lang);
+      document.documentElement.lang = lang === 'zh' ? 'zh-Hans' : 'en';
+      langButtons.forEach(btn =>
+        btn.classList.toggle('active', btn.dataset.lang === lang)
+      );
+      document.querySelectorAll('.i18n').forEach(el => {
+        const text = el.dataset[lang];
+        if (text) el.textContent = text;
+      });
+      localStorage.setItem('fml_lang', lang);
+      // update dynamic module content when language changes
+      if (typeof window.updateModuleLanguage === 'function') {
+        window.updateModuleLanguage();
+      }
+    }
+    langButtons.forEach(btn => {
+      btn.addEventListener('click', () => setLanguage(btn.dataset.lang));
+    });
+    // initialise language
+    const storedLang = localStorage.getItem('fml_lang') || 'en';
+    setLanguage(storedLang);
+
+    // -----------------------
+    // Role selection modal
+    // -----------------------
+    const roleModal = document.getElementById('roleModal');
+    const roleButtons = document.querySelectorAll('.role-btn');
+    function applyRole(role) {
+      localStorage.setItem('fml_role', role);
+      roleModal.style.display = 'none';
+    }
+    roleButtons.forEach(btn => {
+      btn.addEventListener('click', () => applyRole(btn.dataset.role));
+    });
+    function initRole() {
+      const stored = localStorage.getItem('fml_role');
+      if (!stored) {
+        roleModal.style.display = 'flex';
+      } else {
+        roleModal.style.display = 'none';
+      }
+    }
+    initRole();
+
+    // override Start Thinking button on this page: do nothing (already here)
+    document.getElementById('startThinkingTop').onclick = () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    // -----------------------
+    // Think Lab modules
+    // -----------------------
+    const modules = [
+      {
+        title: { en: "AI vs Automation", zh: "AI 与自动化" },
+        scenario: {
+          en: "Your school is considering using machines to sort library books more quickly. Some administrators also suggest letting AI decide which students need more support based on their test scores.",
+          zh: "你的学校正在考虑使用机器更快速地整理图书馆的书籍。有些管理人员还建议，让 AI 根据学生的考试分数来决定哪些学生需要更多帮助。"
+        },
+        questions: [
+          {
+            text: {
+              en: "Which statement best describes the difference between automation and AI in this context?",
+              zh: "在这种情况下，下列哪项最好地描述了自动化和 AI 的区别？"
+            },
+            options: [
+              { en: "Automation follows set rules; AI learns from data to make decisions.", zh: "自动化遵循固定规则；AI 则通过数据学习来做决定。" },
+              { en: "Automation thinks for itself; AI only follows scripts.", zh: "自动化会自行思考；AI 只会按脚本执行。" },
+              { en: "There is no difference; both are just computer programs.", zh: "没有区别；两者都是计算机程序。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Automation completes tasks by following predefined rules, while AI systems learn patterns from data and make decisions accordingly.",
+              zh: "自动化通过遵循预先设定的规则来完成任务，而 AI 系统通过从数据中学习模式并据此做决策。"
+            }
+          },
+          {
+            text: {
+              en: "Which task would be more appropriate for automation than for AI?",
+              zh: "下列哪项任务更适合自动化而不是 AI？"
+            },
+            options: [
+              { en: "Organising books alphabetically on shelves.", zh: "按字母顺序整理书架上的书籍。" },
+              { en: "Predicting which students need emotional support.", zh: "预测哪些学生需要情感支持。" },
+              { en: "Deciding which students should take advanced classes.", zh: "决定哪些学生应该进入高级课程。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Sorting books alphabetically follows clear, repetitive rules and is well suited for automation, whereas deciding on support or placement involves human judgement.",
+              zh: "按字母顺序整理书籍遵循清晰、重复的规则，非常适合自动化；而决定是否给予支持或分班则涉及人类判断。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "Why might using AI to decide which students need academic support be problematic?",
+              zh: "为什么用 AI 来决定哪些学生需要学术支持可能会有问题？"
+            },
+            options: [
+              { en: "AI may not understand individual circumstances or potential", zh: "AI 可能不了解个人情况或潜力" },
+              { en: "AI ensures fairness and always makes unbiased decisions", zh: "AI 确保公平，总是做出无偏见的决定" },
+              { en: "There is no issue; AI is always objective", zh: "没有问题；AI 总是客观的" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "AI decisions can reflect biases or overlook individual contexts; human oversight ensures fairness and nuance.",
+              zh: "AI 的决策可能反映偏见或忽视个别情况；人类监督可以保证公平和细微差异。"
+            }
+          }
+        ]
+      },
+      {
+        title: { en: "Future of Work", zh: "工作的未来" },
+        scenario: {
+          en: "In 2035, many jobs will involve working alongside AI. Some traditional roles may change or disappear, while new types of jobs will emerge.",
+          zh: "到了 2035 年，许多工作将涉及与 AI 并肩工作。一些传统角色可能会改变或消失，同时也会出现新的工作类型。"
+        },
+        questions: [
+          {
+            text: {
+              en: "What kind of tasks are most likely to be automated in the future?",
+              zh: "哪些类型的任务最有可能在未来被自动化？"
+            },
+            options: [
+              { en: "Highly repetitive and rule-based tasks.", zh: "高度重复且基于规则的任务。" },
+              { en: "Tasks requiring empathy and complex judgement.", zh: "需要同理心和复杂判断的任务。" },
+              { en: "Creative brainstorming with diverse perspectives.", zh: "需要多元视角的创造性头脑风暴。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Research suggests that generative AI may disrupt up to 50% of tasks for over 30% of workers, particularly those involving routine cognitive work.",
+              zh: "研究表明，生成式 AI 可能会扰动 50% 的任务，影响 30% 以上的工作人员，尤其是那些涉及常规认知工作的任务。"
+            }
+          },
+          {
+            text: {
+              en: "What should you focus on to stay relevant in a changing job market?",
+              zh: "为了在不断变化的就业市场中保持竞争力，你应该关注什么？"
+            },
+            options: [
+              { en: "Developing human skills like creativity and empathy.", zh: "培养创造力、共情等人类技能。" },
+              { en: "Memorising as many facts as possible.", zh: "尽可能记住大量事实。" },
+              { en: "Relying solely on AI tools for all work.", zh: "完全依赖 AI 工具来完成所有工作。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Studies highlight that uniquely human strengths—critical thinking, creativity, adaptability, empathy and ethical judgement—will remain valuable.",
+              zh: "研究强调，人类独有的优势——批判性思维、创造力、适应力、共情和道德判断——将持续具有价值。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "How can you prepare for jobs that don't yet exist?",
+              zh: "你如何为尚不存在的工作做好准备？"
+            },
+            options: [
+              { en: "By developing transferable skills and a habit of learning", zh: "通过培养可迁移的技能和持续学习的习惯" },
+              { en: "By waiting until the jobs appear", zh: "等这些工作出现时再准备" },
+              { en: "By memorising facts without understanding", zh: "通过死记硬背而不理解" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Cultivating adaptability and a lifelong learning mindset helps you navigate new roles and technologies.",
+              zh: "培养适应力和终身学习的心态可以帮助你应对新的岗位和技术。"
+            }
+          }
+        ]
+      },
+      {
+        title: { en: "Human vs AI Strengths", zh: "人类与 AI 的优势" },
+        scenario: {
+          en: "A friend says, 'AI can do everything better than humans.' You’re not sure this is true.",
+          zh: "你的朋友说：“AI 可以把所有事情都做得比人类好。”你不确定这是否属实。"
+        },
+        questions: [
+          {
+            text: {
+              en: "Which ability is currently still a human advantage over AI?",
+              zh: "下列哪项能力目前仍然是人类相较于 AI 的优势？"
+            },
+            options: [
+              { en: "Understanding and sharing another person’s feelings.", zh: "理解并分享他人的感受。" },
+              { en: "Adding long columns of numbers instantly.", zh: "快速计算长串数字。" },
+              { en: "Translating text between languages instantly.", zh: "即时翻译文本。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Empathy and emotional understanding remain uniquely human skills, whereas calculation and translation can be handled by machines.",
+              zh: "同理心和情感理解仍然是人类独有的技能，而计算和翻译可以由机器完成。"
+            }
+          },
+          {
+            text: {
+              en: "Why is critical thinking considered a core human strength?",
+              zh: "为什么批判性思维被认为是人类的核心优势？"
+            },
+            options: [
+              { en: "It involves questioning assumptions and making value judgements.", zh: "因为它涉及质疑假设和做出价值判断。" },
+              { en: "It follows strict rules without room for interpretation.", zh: "因为它遵循严格的规则，没有解释空间。" },
+              { en: "It requires storing large amounts of data.", zh: "因为它需要存储大量数据。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Critical thinking includes questioning assumptions, evaluating evidence and recognising biases—areas where human perspective is essential.",
+              zh: "批判性思维包括质疑假设、评估证据和识别偏见，这些领域离不开人类的独特视角。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "Which area is still challenging for AI compared to humans?",
+              zh: "与人类相比，AI 仍然在哪个领域面临挑战？"
+            },
+            options: [
+              { en: "Making ethical judgments based on values", zh: "基于价值观做出伦理判断" },
+              { en: "Calculating large numbers quickly", zh: "快速计算大数" },
+              { en: "Transcribing speech into text", zh: "把语音转写成文本" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "AI lacks moral understanding and cannot fully grasp human values, whereas humans consider ethics and context.",
+              zh: "AI 缺乏道德理解，无法完全把握人类价值观，而人类考虑伦理和情境。"
+            }
+          }
+        ]
+      },
+      {
+        title: { en: "AI Bias", zh: "AI 偏见" },
+        scenario: {
+          en: "An AI used in a company consistently rates applicants from certain backgrounds lower. It was trained on past hiring data.",
+          zh: "一家公司的 AI 在对不同背景的申请者进行评分时总是给某些群体较低的分数。它是用过去的招聘数据训练的。"
+        },
+        questions: [
+          {
+            text: {
+              en: "Where can bias enter an AI system?",
+              zh: "偏见可能在 AI 系统的哪个环节产生？"
+            },
+            options: [
+              { en: "Data collection, labelling, training and deployment stages.", zh: "数据收集、标注、训练和部署阶段。" },
+              { en: "Only in the coding phase.", zh: "仅在编程阶段。" },
+              { en: "Bias cannot occur because AI is objective.", zh: "偏见不会出现，因为 AI 是客观的。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Bias can arise during data collection, labelling, training and deployment; diverse datasets and oversight are needed to mitigate it.",
+              zh: "偏见可能在数据收集、标注、训练和部署阶段出现；需要多样化的数据集和监督来减少偏见。"
+            }
+          },
+          {
+            text: {
+              en: "What is one way to reduce bias in AI applications?",
+              zh: "减少 AI 偏见的一种方法是什么？"
+            },
+            options: [
+              { en: "Include diverse voices and data when designing and testing.", zh: "在设计和测试时纳入多样化的声音和数据。" },
+              { en: "Rely solely on past examples for training data.", zh: "仅依赖过去的案例作为训练数据。" },
+              { en: "Avoid human oversight to prevent subjective influence.", zh: "避免人类监督，以防止主观影响。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Ensuring diverse data and including multiple perspectives in design and testing can help reduce bias.",
+              zh: "确保数据多样化，并在设计和测试中纳入多种视角，有助于减少偏见。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "Why might AI trained on past hiring data perpetuate discrimination?",
+              zh: "为什么基于过去招聘数据训练的 AI 可能会延续歧视？"
+            },
+            options: [
+              { en: "Because the data reflects historical biases in hiring practices", zh: "因为数据反映了招聘实践中的历史偏见" },
+              { en: "Because AI always ignores patterns in data", zh: "因为 AI 总是忽视数据中的模式" },
+              { en: "Because the training data is completely unbiased", zh: "因为训练数据完全没有偏见" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Historical data can encode societal biases; AI trained on it may reproduce these unfair patterns unless corrected.",
+              zh: "历史数据可能包含社会偏见；训练其上的 AI 可能会重现这些不公平的模式，除非进行修正。"
+            }
+          }
+        ]
+      },
+      {
+        title: { en: "Fake News & Misinformation", zh: "假新闻与误导信息" },
+        scenario: {
+          en: "You come across a news article shared widely on social media. It claims that a celebrity donated millions to a charity, but there are no sources listed.",
+          zh: "你在社交媒体上看到一篇广泛传播的新闻文章，声称某位名人向慈善机构捐赠了数百万元，但没有列出任何来源。"
+        },
+        questions: [
+          {
+            text: {
+              en: "What is a good first step when you encounter a surprising claim online?",
+              zh: "当你在网上遇到惊人的说法时，首先应该做什么？"
+            },
+            options: [
+              { en: "Check if reputable sources confirm the information.", zh: "查看可信的来源是否证实此信息。" },
+              { en: "Share it quickly before others do.", zh: "在别人之前迅速分享。" },
+              { en: "Assume it’s true if many people have shared it.", zh: "如果很多人分享，就默认它是真的。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Checking multiple reliable sources helps verify whether a claim is true or false.",
+              zh: "查看多个可靠来源有助于验证某个说法的真伪。"
+            }
+          },
+          {
+            text: {
+              en: "Why should you be cautious with sensational headlines?",
+              zh: "为什么要对耸人听闻的标题保持谨慎？"
+            },
+            options: [
+              { en: "They may exaggerate or distort facts to attract clicks.", zh: "它们可能夸大或歪曲事实以吸引点击。" },
+              { en: "They always provide accurate summaries.", zh: "它们总是提供准确的摘要。" },
+              { en: "They are published by trustworthy experts.", zh: "它们由可信的专家发布。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Sensational headlines often exaggerate or misrepresent stories to grab attention and may not reflect the underlying facts.",
+              zh: "耸人听闻的标题经常夸大或误传故事，以吸引注意力，并不一定反映事实。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "What should you do to verify if a piece of information is reliable?",
+              zh: "为了验证一条信息是否可靠，你应该做什么？"
+            },
+            options: [
+              { en: "Check multiple trusted sources and look for evidence", zh: "查阅多个可信来源并寻找证据" },
+              { en: "Share it immediately if it's sensational", zh: "如果很劲爆就立刻分享" },
+              { en: "Assume it’s true if it appears on social media", zh: "如果出现在社交媒体上，就认为是真的" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Cross-checking facts with credible sources helps you distinguish truth from misinformation.",
+              zh: "与可靠来源交叉核对事实可以帮助你区分真实信息和错误信息。"
+            }
+          }
+        ]
+      },
+      {
+        title: { en: "Ethics of AI", zh: "AI 的伦理" },
+        scenario: {
+          en: "A hospital uses an AI to determine which patients should receive limited organ transplants. The AI bases its recommendation purely on survival statistics.",
+          zh: "一家医院使用 AI 来决定哪些病人应该获得有限的器官移植。AI 完全基于存活率统计来提供建议。"
+        },
+        questions: [
+          {
+            text: {
+              en: "What ethical concern might arise from this scenario?",
+              zh: "这个情境可能会引发什么伦理担忧？"
+            },
+            options: [
+              { en: "It may ignore individual circumstances and values.", zh: "它可能忽视个人的具体情况和价值。" },
+              { en: "It completely removes the risk of human bias.", zh: "它完全消除人类偏见的风险。" },
+              { en: "It ensures fair distribution of organs.", zh: "它确保器官公平分配。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Relying solely on survival statistics may overlook individual values, quality of life and fairness considerations.",
+              zh: "仅凭存活率统计可能忽视个体价值、生活质量和公平性等因素。"
+            }
+          },
+          {
+            text: {
+              en: "How can we make AI-supported decisions more ethical?",
+              zh: "我们如何让 AI 支持的决策更加合乎伦理？"
+            },
+            options: [
+              { en: "Combine AI input with human judgement and clear ethical guidelines.", zh: "将 AI 的建议与人类判断和明确的伦理指南结合。" },
+              { en: "Let AI decide alone to avoid human emotions.", zh: "让 AI 单独决定，以避免人类情绪。" },
+              { en: "Always choose the option that maximises efficiency.", zh: "始终选择效率最高的方案。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Using AI as a tool while incorporating human judgement and ethical principles helps ensure fairness and context sensitivity.",
+              zh: "将 AI 作为工具，同时融入人类判断和伦理原则，有助于保证公平与情境敏感性。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "Should AI decision systems be transparent? Why?",
+              zh: "AI 决策系统应该透明吗？为什么？"
+            },
+            options: [
+              { en: "Yes, transparency allows humans to understand and challenge decisions", zh: "是的，透明度让人们理解并质疑决策" },
+              { en: "No, AI's processes should remain secret", zh: "不，AI 的过程应该保密" },
+              { en: "It doesn't matter because AI is always fair", zh: "无所谓，因为 AI 总是公平的" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Transparency helps ensure accountability and allows humans to question or correct unfair decisions.",
+              zh: "透明性有助于确保问责制，并允许人们质疑或纠正不公平的决策。"
+            }
+          }
+        ]
+      },
+      {
+        title: { en: "Emotional Intelligence", zh: "情商与合作" },
+        scenario: {
+          en: "During a group project, an AI helps assign tasks based on past performance, but some teammates feel left out and unmotivated.",
+          zh: "在一个小组项目中，AI 根据过去的表现分配任务，但一些队友感到被忽视和缺乏动力。"
+        },
+        questions: [
+          {
+            text: {
+              en: "Why are empathy and communication important when using AI to manage groups?",
+              zh: "在用 AI 管理团队时，为什么同理心和沟通很重要？"
+            },
+            options: [
+              { en: "They help ensure everyone feels heard and valued.", zh: "它们有助于确保每个人都感到被倾听和被重视。" },
+              { en: "They slow down decision-making unnecessarily.", zh: "它们会不必要地拖慢决策过程。" },
+              { en: "They are less important than efficiency.", zh: "它们比效率不重要。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "When AI manages groups, human empathy and communication help ensure that everyone feels included and motivated.",
+              zh: "当 AI 管理团队时，人类的同理心和沟通有助于确保每个人都感到被纳入和有动力。"
+            }
+          },
+          {
+            text: {
+              en: "What should you do if an AI-generated team assignment makes someone feel left out?",
+              zh: "如果 AI 生成的小组分配让某人感到被排挤，你应该怎么做？"
+            },
+            options: [
+              { en: "Talk to the person and adjust tasks to make participation fairer.", zh: "和当事人谈谈，并调整任务，使参与更公平。" },
+              { en: "Ignore it because the AI must be right.", zh: "忽视它，因为 AI 一定是对的。" },
+              { en: "Let the AI handle feelings too.", zh: "让 AI 也负责处理感受。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Listening to team members and adjusting tasks fosters fairness and motivation, complementing AI recommendations.",
+              zh: "倾听团队成员并调整任务有助于公平和激励，补充了 AI 的建议。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "How can human empathy improve the use of AI in teams?",
+              zh: "人类的同理心如何改善在团队中使用 AI？"
+            },
+            options: [
+              { en: "By understanding people's feelings and adapting AI-generated plans accordingly", zh: "通过理解人们的感受，并相应调整 AI 提出的计划" },
+              { en: "By ignoring human feedback and trusting AI completely", zh: "通过忽视人类反馈并完全信任 AI" },
+              { en: "By letting AI handle emotions", zh: "让 AI 处理情感" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Empathy helps integrate AI suggestions with human needs, promoting motivation and fairness.",
+              zh: "同理心有助于将 AI 建议与人类需求结合，促进积极性和公平。"
+            }
+          }
+        ]
+      },
+      {
+        title: { en: "Creativity & Innovation", zh: "创造力与创新" },
+        scenario: {
+          en: "An AI suggests a project plan that follows patterns it has learned from the past. You think it lacks original ideas.",
+          zh: "AI 提出的项目计划遵循其从过去学习到的模式，你认为缺少原创想法。"
+        },
+        questions: [
+          {
+            text: {
+              en: "Why is human creativity still essential in the age of AI?",
+              zh: "在 AI 时代，人类的创造力为什么仍然重要？"
+            },
+            options: [
+              { en: "Creativity involves making new connections and imagining possibilities beyond existing data.", zh: "创造力涉及建立新的连接，想象现有数据之外的可能性。" },
+              { en: "Creativity is about repeating patterns accurately.", zh: "创造力就是准确重复模式。" },
+              { en: "Creativity is no longer needed when AI exists.", zh: "有了 AI，就不再需要创造力。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "AI can remix existing patterns but human creativity draws on intuition, imagination and cross-disciplinary thinking to generate novel ideas.",
+              zh: "AI 可以重新组合现有的模式，但人类的创造力依赖直觉、想象力和跨学科思维来产生新颖的想法。"
+            }
+          },
+          {
+            text: {
+              en: "How can AI support, rather than replace, human creativity?",
+              zh: "AI 如何支持而非取代人类的创造力？"
+            },
+            options: [
+              { en: "By providing ideas and freeing up time so humans can explore unique concepts.", zh: "通过提供思路和节省时间，让人类可以探索独特的概念。" },
+              { en: "By dictating all creative decisions.", zh: "由 AI 决定所有创意决策。" },
+              { en: "By preventing humans from experimenting.", zh: "通过阻止人类进行尝试。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "AI tools can suggest possibilities and handle routine tasks, giving people more space to experiment and develop original ideas.",
+              zh: "AI 工具可以提供可能性并处理常规任务，让人们有更多空间去尝试和发展原创想法。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "What should you do if AI-generated ideas lack originality?",
+              zh: "如果 AI 生成的想法缺乏原创性，你应该怎么做？"
+            },
+            options: [
+              { en: "Use them as a starting point and brainstorm your own unique ideas", zh: "把它们作为起点，头脑风暴出你自己的独特想法" },
+              { en: "Assume AI knows better and stick with its plan", zh: "假设 AI 更懂，坚持它的计划" },
+              { en: "Stop creating because AI is better at it", zh: "停止创作，因为 AI 更擅长" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "AI suggestions can inspire you, but human creativity comes from making new connections and exploring beyond patterns.",
+              zh: "AI 的建议可以启发你，但人类创造力来自建立新连接和探索模式之外。"
+            }
+          }
+        ]
+      },
+      {
+        title: { en: "AI in Education", zh: "AI 在教育中" },
+        scenario: {
+          en: "Your class uses an AI tutor that adapts exercises to each student’s level. Some classmates rely on it so much they no longer ask human teachers for help.",
+          zh: "你的班级使用一个 AI 导师，根据每个学生的水平调整练习。一些同学过于依赖它，以至于不再向老师请教。"
+        },
+        questions: [
+          {
+            text: {
+              en: "What is a potential downside of relying solely on an AI tutor?",
+              zh: "完全依赖 AI 导师可能有什么缺点？"
+            },
+            options: [
+              { en: "Students may miss out on human interaction and personalised feedback.", zh: "学生可能错过人际互动和个性化反馈。" },
+              { en: "AI always understands feelings better than humans do.", zh: "AI 总是比人类更能理解感受。" },
+              { en: "AI tutors can help students develop empathy and social skills.", zh: "AI 导师可以帮助学生发展同理心和社交技能。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "AI tutors can be useful, but relying solely on them might reduce opportunities for dialogue, feedback and mentorship from human teachers.",
+              zh: "AI 导师很有用，但完全依赖它们可能减少与老师对话、获得反馈和指导的机会。"
+            }
+          },
+          {
+            text: {
+              en: "How can teachers and AI work together effectively?",
+              zh: "教师和 AI 如何才能有效合作？"
+            },
+            options: [
+              { en: "Teachers use AI for routine tasks, freeing time for deeper discussions and guidance.", zh: "老师用 AI 处理常规任务，将更多时间用于深入讨论和指导。" },
+              { en: "Teachers stop teaching altogether and let AI take over.", zh: "老师完全停止教学，让 AI 接管。" },
+              { en: "AI decides the curriculum without teacher input.", zh: "AI 在没有老师参与的情况下决定课程。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "When AI handles repetitive tasks, teachers can focus on mentoring, discussion and complex problem-solving with students.",
+              zh: "当 AI 处理重复性任务时，老师可以专注于指导、讨论和与学生一起解决复杂问题。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "Why is it important to combine AI tutoring with human teachers?",
+              zh: "为什么将 AI 辅导与人类教师相结合很重要？"
+            },
+            options: [
+              { en: "Because teachers provide social interaction and emotional support", zh: "因为教师提供社会互动和情感支持" },
+              { en: "Because AI tutors are unreliable for facts", zh: "因为 AI 导师在事实方面不可靠" },
+              { en: "Because students don't enjoy using AI", zh: "因为学生不喜欢使用 AI" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Human teachers offer nuanced feedback, mentorship and empathy that AI lacks, supporting holistic learning.",
+              zh: "人类教师提供 AI 缺乏的细致反馈、指导和同理心，支持整体学习。"
+            }
+          }
+        ]
+      },
+      {
+        title: { en: "Preparing for the Future", zh: "为未来做好准备" },
+        scenario: {
+          en: "You are thinking about your future career. The job market is changing fast due to technology.",
+          zh: "你正在思考自己的未来职业。由于技术的快速发展，就业市场正在迅速变化。"
+        },
+        questions: [
+          {
+            text: {
+              en: "What can you do to prepare for a future with AI?",
+              zh: "为了应对有 AI 的未来，你可以做什么？"
+            },
+            options: [
+              { en: "Cultivate lifelong learning, adaptability and human-centred skills.", zh: "培养终身学习能力、适应力和以人为本的技能。" },
+              { en: "Avoid learning new skills because AI will handle everything.", zh: "不要学习新技能，因为 AI 会处理一切。" },
+              { en: "Focus solely on one narrow skill.", zh: "只专注于一种狭窄的技能。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Developing adaptability, continuous learning and human strengths helps you thrive alongside evolving technologies.",
+              zh: "培养适应力、持续学习和人类优势技能有助于你在不断发展的科技环境中茁壮成长。"
+            }
+          },
+          {
+            text: {
+              en: "Why is it important to balance AI tools with your own judgement?",
+              zh: "为什么平衡使用 AI 工具和自己的判断很重要？"
+            },
+            options: [
+              { en: "Because AI can be helpful but still makes mistakes and lacks human values.", zh: "因为 AI 可以提供帮助，但仍会犯错并缺乏人类的价值观。" },
+              { en: "Because AI is always perfect.", zh: "因为 AI 总是完美的。" },
+              { en: "Because human judgement is no longer needed.", zh: "因为不再需要人类判断。" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "AI provides powerful tools, but combining them with critical thinking, ethics and human values leads to better decisions.",
+              zh: "AI 提供强大的工具，但结合批判性思维、伦理和人类价值观会带来更好的决策。"
+            }
+          }
+          ,
+          {
+            text: {
+              en: "What does 'lifelong learning' mean in a world with AI?",
+              zh: "在有 AI 的世界中，“终身学习”意味着什么？"
+            },
+            options: [
+              { en: "Continuously updating your knowledge and skills throughout life", zh: "在整个生命过程中不断更新你的知识和技能" },
+              { en: "Finishing school and never learning again", zh: "完成学校教育后不再学习" },
+              { en: "Relying entirely on AI to learn for you", zh: "完全依赖 AI 替你学习" }
+            ],
+            correctIndex: 0,
+            explanation: {
+              en: "Lifelong learning involves staying curious and open to new ideas so you can adapt as technology evolves.",
+              zh: "终身学习意味着保持好奇并接受新想法，这样你才能随着技术发展而适应。"
+            }
+          }
+        ]
+      }
+    ];
+    let currentModuleIndex = 0;
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    // compute total number of questions across all modules for progress tracking
+    const totalQuestions = modules.reduce((sum, m) => sum + m.questions.length, 0);
+
+    const moduleProgressEl = document.getElementById('moduleProgress');
+    const progressBarEl = document.getElementById('progressBar');
+    const moduleTitleEl = document.getElementById('moduleTitle');
+    const moduleScenarioEl = document.getElementById('moduleScenario');
+    const moduleQuestionsEl = document.getElementById('moduleQuestions');
+    const moduleExplanationEl = document.getElementById('moduleExplanation');
+    const moduleNextBtn = document.getElementById('moduleNextBtn');
+    const completionMessageEl = document.getElementById('completionMessage');
+
+    function renderProgress() {
+      // calculate how many questions have been answered so far (0-based)
+      const questionsBefore = modules.slice(0, currentModuleIndex).reduce((sum, m) => sum + m.questions.length, 0);
+      const answered = questionsBefore + currentQuestionIndex;
+      // update numeric label to reflect question-level progress
+      moduleProgressEl.textContent = (answered + 1) + ' / ' + totalQuestions;
+      const percent = (answered / totalQuestions) * 100;
+      progressBarEl.style.width = percent + '%';
+    }
+
+    function renderQuestion() {
+      moduleQuestionsEl.innerHTML = '';
+      moduleExplanationEl.textContent = '';
+      moduleNextBtn.style.display = 'none';
+      const lang = document.body.getAttribute('data-lang') || 'en';
+      const module = modules[currentModuleIndex];
+      const q = module.questions[currentQuestionIndex];
+
+      // update progress bar and label whenever a new question is rendered
+      renderProgress();
+      // render question text
+      const qEl = document.createElement('p');
+      qEl.className = 'module-question';
+      qEl.textContent = q.text[lang];
+      moduleQuestionsEl.appendChild(qEl);
+      // render options
+      q.options.forEach((opt, idx) => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.textContent = opt[lang];
+        // store the option index so the handler can always refer to the latest state
+        btn.dataset.idx = idx;
+        btn.addEventListener('click', function () {
+          const langNow = document.body.getAttribute('data-lang') || 'en';
+          // get current question fresh, in case indices have advanced
+          const currentModule = modules[currentModuleIndex];
+          const currentQ = currentModule.questions[currentQuestionIndex];
+          const chosenIdx = parseInt(this.dataset.idx);
+          const isCorrect = chosenIdx === currentQ.correctIndex;
+          if (isCorrect) {
+            moduleExplanationEl.textContent = (langNow === 'zh' ? '✅ 正确！' : '✅ Correct!') + ' ' + currentQ.explanation[langNow];
+          } else {
+            moduleExplanationEl.textContent = (langNow === 'zh' ? '⚠️ 再想想！' : '⚠️ Try again!') + ' ' + currentQ.explanation[langNow];
+          }
+          moduleNextBtn.style.display = 'inline-block';
+        });
+        moduleQuestionsEl.appendChild(btn);
+      });
+    }
+
+    function renderModule() {
+      if (currentModuleIndex >= modules.length) {
+        // completed all modules
+        document.querySelector('.module-container').style.display = 'none';
+        completionMessageEl.style.display = 'block';
+        return;
+      }
+      const lang = document.body.getAttribute('data-lang') || 'en';
+      const module = modules[currentModuleIndex];
+      moduleTitleEl.textContent = module.title[lang];
+      moduleScenarioEl.textContent = module.scenario[lang];
+      currentQuestionIndex = 0;
+      renderProgress();
+      renderQuestion();
+    }
+
+    moduleNextBtn.addEventListener('click', () => {
+      const module = modules[currentModuleIndex];
+      if (currentQuestionIndex < module.questions.length - 1) {
+        currentQuestionIndex++;
+        renderQuestion();
+      } else {
+        // move to next module
+        currentModuleIndex++;
+        renderModule();
+      }
+    });
+
+    // update module language on language change
+    window.updateModuleLanguage = function() {
+      // re-render current module and question with new language
+      if (currentModuleIndex < modules.length) {
+        const lang = document.body.getAttribute('data-lang') || 'en';
+        const module = modules[currentModuleIndex];
+        moduleTitleEl.textContent = module.title[lang];
+        moduleScenarioEl.textContent = module.scenario[lang];
+        // update progress label using question-level calculation
+        renderProgress();
+        // update question and options
+        const q = module.questions[currentQuestionIndex];
+        // update question text
+        const qEl = moduleQuestionsEl.querySelector('p.module-question');
+        if (qEl) qEl.textContent = q.text[lang];
+        // update options
+        const opts = moduleQuestionsEl.querySelectorAll('button.choice-btn');
+        opts.forEach((btn, idx) => {
+          btn.textContent = q.options[idx][lang];
+        });
+        // update explanation if visible
+        if (moduleExplanationEl.textContent) {
+          const prefix = moduleExplanationEl.textContent.startsWith('✅') ? (lang === 'zh' ? '✅ 正确！' : '✅ Correct!') : (lang === 'zh' ? '⚠️ 再想想！' : '⚠️ Try again!');
+          const qExp = q.explanation[lang];
+          moduleExplanationEl.textContent = prefix + ' ' + qExp;
+        }
+        // update next button label
+        const nextSpan = moduleNextBtn.querySelector('span.i18n');
+        if (nextSpan) nextSpan.textContent = lang === 'zh' ? '下一步' : 'Next';
+      } else {
+        // update completion message
+        const h2 = completionMessageEl.querySelector('h2');
+        const p = completionMessageEl.querySelector('p');
+        const a = completionMessageEl.querySelector('a');
+        h2.textContent = lang === 'zh' ? '恭喜完成！' : 'Well done!';
+        p.textContent = lang === 'zh' ? '你已经完成了全部 10 个模块。' : 'You have completed all 10 modules.';
+        a.textContent = lang === 'zh' ? '前往创造区' : 'Continue to Create Zone';
+      }
+    };
+
+    // initialise modules
+    renderModule();
+
+    // set year in footer
+    document.getElementById('year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
